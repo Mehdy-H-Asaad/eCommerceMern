@@ -1,0 +1,24 @@
+.orbitron {
+	font-family: "Orbitron", sans-serif;
+}
+.link {
+	position: relative;
+}
+.link::before {
+	content: "";
+	position: absolute;
+	bottom: -2px;
+	left: 0;
+	height: 2px;
+	width: 0;
+	transition: 0.3s;
+}
+.link-black::before {
+	background-color: black;
+}
+.link-white::before {
+	background-color: white;
+}
+.link:hover::before {
+	width: 100%;
+}

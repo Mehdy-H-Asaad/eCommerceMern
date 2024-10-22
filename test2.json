@@ -1,0 +1,39 @@
+{
+    "status": "success",
+    "data": {
+      "product": {
+        "id": "64a8b2f56c9b6b2d3a8f9b2c",
+        "name": "Gaming Laptop X500",
+        "description": "High-performance gaming laptop with the latest hardware.",
+        "category": "Computers",
+        "images": [
+          "https://example.com/images/laptop1.jpg",
+          "https://example.com/images/laptop1_2.jpg"
+        ],
+        "variants": [
+          {
+              "size": {
+                "value" : "M",
+                "colors" : ["Red","white"],
+                "stock" : {
+                  "quantityLeft": 15
+                },
+                "price": 200
+              }
+          },
+          {
+              "size": {
+                "value" : "L",
+                "colors" : ["Red"],
+                "stock" : {
+                  "quantityLeft": 15
+                },
+                "price": 10
+              }
+          }
+        ],
+        "createdBy": "64a6f5b4f1a2c3d4e5f6b7d1",
+        "createdAt": "2023-08-12T10:30:00.000Z"
+      }
+    }
+  }
