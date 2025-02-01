@@ -1,5 +1,6 @@
 import { useCustomQuery } from "@/hooks/useCustomQuery";
-import { getSingleProduct, TProductDTO } from "..";
+import { TProductDTO } from "../types";
+import { getSingleProduct } from "../index";
 
 export const useGetSingleProduct = (id: string) => {
 	const { data: singleProductData, isLoading: isLoadingProduct } =

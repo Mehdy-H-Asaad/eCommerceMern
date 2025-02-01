@@ -3,7 +3,7 @@ export const DiscoverShop = () => {
 	return (
 		<div>
 			<div className="container">
-				<div className="flex gap-14">
+				<div className="flex flex-col sm:flex-row gap-0 sm:gap-14 py-primary">
 					<ShopFilters />
 					<ShopProducts />
 				</div>

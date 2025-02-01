@@ -1,10 +1,8 @@
 import mongoose, { Schema, Types } from "mongoose";
-import {
-	EStatus,
-	TProduct,
-} from "../../../Application/types/product/TProductModel";
+
 import { reviewSchema } from "./review.model";
 import { variantSchema } from "./schemas/variant.schema";
+import { EStatus, TProduct } from "../../../domain/entities/product.entity";
 
 const productSchema = new Schema<TProduct>(
 	{
@@ -37,15 +35,6 @@ const productSchema = new Schema<TProduct>(
 				required: true,
 			},
 		],
-		// attributes: {
-		// 	type: mongoose.Schema.Types.Mixed,
-		// 	required: true,
-		// 	default: {},
-		// },
-		// stock: {
-		// 	type: stockSchema,
-		// 	required: true,
-		// },
 
 		status: {
 			type: String,
@@ -58,6 +47,14 @@ const productSchema = new Schema<TProduct>(
 				type: reviewSchema,
 			},
 		],
+		salesCount: {
+			type: Number,
+			default: 0,
+		},
+		views: {
+			type: Number,
+			default: 0,
+		},
 	},
 	{ timestamps: true }
 );

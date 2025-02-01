@@ -10,6 +10,9 @@ router
 	.route("/")
 	.get(categoryController.getAllCategories)
 	.post(categoryController.createCategory);
-router.route("/:category").get(categoryController.getSingleCategory);
+
+router.route("/:categoryName").get(categoryController.findCategoryByName);
+
+router.route("/:categoryId").get(categoryController.getSingleCategory);
 
 export default router;

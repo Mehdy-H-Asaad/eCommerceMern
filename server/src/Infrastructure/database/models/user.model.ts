@@ -1,6 +1,7 @@
 import mongoose, { Schema } from "mongoose";
 import { ROLES } from "../../../shared/types/auth";
-import { TUser } from "../../../Application/types/user/TUserModel";
+import { TUser } from "../../../domain/entities/user.entity";
+
 const userSchema = new Schema<TUser>(
 	{
 		userName: {
@@ -20,6 +21,7 @@ const userSchema = new Schema<TUser>(
 		password: {
 			type: String,
 			minlength: 6,
+			select: false,
 		},
 		role: {
 			type: String,
@@ -34,6 +36,30 @@ const userSchema = new Schema<TUser>(
 				default: [],
 			},
 		],
+		purchases: [
+			{
+				type: mongoose.Schema.Types.ObjectId,
+				ref: "Order",
+				default: [],
+			},
+		],
+		// Track orders as a seller
+		sales: [
+			{
+				type: mongoose.Schema.Types.ObjectId,
+				ref: "Order",
+				default: [],
+			},
+		],
+		address: {
+			type: String,
+		},
+		phoneNumber: {
+			type: String,
+		},
+		profileImg: {
+			type: String,
+		},
 	},
 	{ timestamps: true }
 );

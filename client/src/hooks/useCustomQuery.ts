@@ -6,7 +6,7 @@ export const useCustomQuery = <T>(
 	queryOptions?: UseQueryOptions<T, Error>
 ) => {
 	return useQuery<T>({
-		queryKey: [key],
+		queryKey: key,
 		queryFn: queryFunction,
 		...queryOptions,
 	});

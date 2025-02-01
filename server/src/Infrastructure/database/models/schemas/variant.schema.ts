@@ -1,7 +1,8 @@
 import { Schema } from "mongoose";
-import { TDiscount } from "../../../../Application/types/product/TProductModel";
+
 import { discountSchema } from "../discount.model";
 import { stockSchema } from "../stock.model";
+import { TDiscount } from "../../../../domain/entities/product.entity";
 
 export type TStock = {
 	quantityLeft: Number;

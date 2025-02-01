@@ -1,20 +1,20 @@
 import { ContainerModule } from "inversify";
 import { CategoryController } from "../../../Presentation/controllers/category/category.controller";
-import { TCategoryRepository } from "../../../domain/repositories/category/TCategoryRepository";
 import { CategoryRepository } from "../../repositories/category/category.repository";
-import { TCategoryService } from "../../../Application/types/category/TCategoryService";
 import { CategoryService } from "../../../Application/Services/category/category.service";
-import { GetSingleCategoryUseCase } from "../../../Application/useCases/category/getSingleCategory.use-case";
-import { GetAllCategoriesUseCase } from "../../../Application/useCases/category/getAllCategories.use-case";
-import { CreateCategoryUseCase } from "../../../Application/useCases/category/createCategory.use-case";
+import { GetSingleCategoryUseCase } from "../../../Application/use-cases/category/getSingleCategory.use-case";
+import { GetAllCategoriesUseCase } from "../../../Application/use-cases/category/getAllCategories.use-case";
+import { CreateCategoryUseCase } from "../../../Application/use-cases/category/createCategory.use-case";
+import { FindCategoryByNameUseCase } from "../../../Application/use-cases/category/findCategoryByName.use-case";
 
 export const categoryBinding = new ContainerModule(bind => {
 	bind<CategoryController>(CategoryController).toSelf();
 
-	bind<TCategoryRepository>("TCategoryRepository").to(CategoryRepository);
-	bind<TCategoryService>("TCategoryService").to(CategoryService);
+	bind<CategoryRepository>(CategoryRepository).toSelf();
+	bind<CategoryService>(CategoryService).toSelf();
 
 	bind<GetSingleCategoryUseCase>(GetSingleCategoryUseCase).toSelf();
 	bind<GetAllCategoriesUseCase>(GetAllCategoriesUseCase).toSelf();
 	bind<CreateCategoryUseCase>(CreateCategoryUseCase).toSelf();
+	bind<FindCategoryByNameUseCase>(FindCategoryByNameUseCase).toSelf();
 });

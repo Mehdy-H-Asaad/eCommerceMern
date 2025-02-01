@@ -1,10 +1,13 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+import { useFieldArray, useForm } from "react-hook-form";
 import { z } from "zod";
 import { useState, ChangeEvent } from "react";
-import { createdProductSchema, useCreateProduct } from "../..";
+import { useCreateProduct } from "../..";
+import { productSchema } from "../../schema/product.shema";
 
 export const useCreateProductForm = () => {
+	const createdProductSchema = productSchema;
+
 	const [selectedImg, setSelectedImg] = useState<string | ArrayBuffer | null>(
 		null
 	);
@@ -17,8 +20,25 @@ export const useCreateProductForm = () => {
 			productName: "",
 			status: "new",
 			productImage: "",
-			variants: [],
+			variants: [
+				{
+					colors: [],
+					discount: { percentage: 0 },
+					price: 0,
+					size: "",
+					stock: { quantityLeft: 0 },
+				},
+			],
 		},
+	});
+
+	const {
+		fields: variants,
+		append: addVariants,
+		remove: removeVariant,
+	} = useFieldArray({
+		control: createdProductForm.control,
+		name: "variants",
 	});
 
 	const handleImgChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -39,5 +59,13 @@ export const useCreateProductForm = () => {
 		createProduct(valuesWithProductImg);
 	};
 
-	return { handleImgChange, onSubmit, createdProductForm, selectedImg };
+	return {
+		handleImgChange,
+		onSubmit,
+		createdProductForm,
+		selectedImg,
+		addVariants,
+		removeVariant,
+		variants,
+	};
 };

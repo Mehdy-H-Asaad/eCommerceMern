@@ -1,13 +1,29 @@
 import { useCustomQuery } from "@/hooks/useCustomQuery";
 import { useSearchParams } from "react-router-dom";
-import { getProducts, TProductDTO } from "..";
+import { TProductDTO } from "../types";
+import { getProducts } from "../index";
 
-export const useGetProducts = () => {
+type TUseGetProducts = {
+	selectedCategoryId?: string;
+	page?: number;
+	limit?: number;
+	categoryName?: string;
+};
+export const useGetProducts = ({
+	limit = 10,
+	page = 1,
+	selectedCategoryId,
+	categoryName,
+}: TUseGetProducts) => {
 	const [searchParams] = useSearchParams();
 
 	const categoryId = searchParams.get("category");
-	const productCondition = searchParams.get("status");
+	const status = searchParams.get("status");
 	const discount = searchParams.get("discount");
+	const maxPrice = Number(searchParams.get("maxPrice"));
+	const search = searchParams.get("search");
+
+	// console.log(search);
 
 	const {
 		data: products,
@@ -15,8 +31,28 @@ export const useGetProducts = () => {
 		isRefetching: isRefetchingProducts,
 		isLoading: isLoadingProducts,
 	} = useCustomQuery<TProductDTO[]>(
-		["products", categoryId, productCondition],
-		() => getProducts(categoryId, productCondition, discount)
+		[
+			"products",
+			categoryId,
+			status,
+			selectedCategoryId,
+			discount,
+			maxPrice,
+			search,
+			categoryName,
+		],
+		() =>
+			getProducts({
+				categoryId,
+				search,
+				status,
+				discount,
+				limit,
+				page,
+				maxPrice,
+				categoryName,
+				selectedCategoryId,
+			})
 	);
 
 	return { products, refetchProducts, isLoadingProducts, isRefetchingProducts };

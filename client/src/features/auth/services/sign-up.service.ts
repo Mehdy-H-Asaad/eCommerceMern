@@ -1,5 +1,5 @@
 import axiosClient from "@/lib/api/axiosClient";
-import { TSignupDTO } from "..";
+import { TSignupDTO } from "../types";
 
 export const signup = async (userData: TSignupDTO) => {
 	try {

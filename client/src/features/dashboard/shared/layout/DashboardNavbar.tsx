@@ -1,4 +1,5 @@
 import { useAuthUser } from "@/features/auth";
+import { Link } from "react-router-dom";
 
 export const DashboardNavbar = () => {
 	const { authUser } = useAuthUser();
@@ -8,13 +9,16 @@ export const DashboardNavbar = () => {
 	}
 
 	return (
-		<nav className="h-20 flex items-center border-b border-gray-200">
+		<nav className="h-24 flex items-center border-b border-gray-200">
 			<div className="container">
 				<div className="flex items-center justify-between">
 					<div>
-						<h3 className="orbitron text-4xl font-[700] tracking-wider">
+						<Link
+							to={"/"}
+							className="orbitron text-4xl font-[700] tracking-wider"
+						>
 							Souqak
-						</h3>
+						</Link>
 					</div>
 
 					<div>

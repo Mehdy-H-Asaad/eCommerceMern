@@ -1,7 +1,7 @@
 import GeneralButton from "@/components/ui/GeneralButton";
 import { Input } from "@/components/ui/input";
 import { MdDeleteForever } from "react-icons/md";
-import { TVariants } from "@/features/product";
+import { productSchema, useCreateProductForm } from "@/features/product";
 import { UseFormReturn } from "react-hook-form";
 import { z } from "zod";
 import {
@@ -11,20 +11,15 @@ import {
 	FormLabel,
 	FormMessage,
 } from "@/components/ui/form";
-import { createdProductSchema } from "@/features/product/schema/createdProductSchema";
-import { useCreateVariantsForm } from "../../..";
 
 type TDashCreateProductVariants = {
-	variants: TVariants[];
-	form: UseFormReturn<z.infer<typeof createdProductSchema>>;
+	form: UseFormReturn<z.infer<typeof productSchema>>;
 };
 
 export const DashCreateProductVariants = ({
 	form,
-	variants,
 }: TDashCreateProductVariants) => {
-	const { addVariants, handleInputChange, handleRemoveVariant } =
-		useCreateVariantsForm();
+	const { variants, addVariants, removeVariant } = useCreateProductForm();
 
 	return (
 		<div className="bg-[#f4f4f5] p-5 rounded-md mt-10 col-span-2">
@@ -35,7 +30,7 @@ export const DashCreateProductVariants = ({
 					<MdDeleteForever
 						size={24}
 						className="mb-2 cursor-pointer text-red-600"
-						onClick={() => handleRemoveVariant(index)}
+						onClick={() => removeVariant(index)}
 					/>
 					<div className="grid grid-cols-5 gap-x-5">
 						<FormField
@@ -45,7 +40,7 @@ export const DashCreateProductVariants = ({
 								<FormItem className="grid w-full max-w-sm items-center gap-1.5">
 									<FormLabel>Size</FormLabel>
 									<FormControl>
-										<Input {...field} type="text" placeholder="L" />
+										<Input {...field} type="text" placeholder="Size" />
 									</FormControl>
 									<FormMessage />
 								</FormItem>
@@ -61,14 +56,10 @@ export const DashCreateProductVariants = ({
 										<Input
 											{...field}
 											type="text"
-											placeholder="Red Green ..."
+											placeholder="Colors"
 											onChange={e => {
 												const inputValue = e.target.value;
-												// Split the input string into an array of colors by spaces
-												const colorsArray = inputValue
-													.split(" ")
-													.filter(Boolean);
-												// Pass the array back to the form field
+												const colorsArray = inputValue.split(" ");
 												field.onChange(colorsArray);
 											}}
 										/>
@@ -90,10 +81,13 @@ export const DashCreateProductVariants = ({
 									<FormControl>
 										<Input
 											{...field}
-											onChange={e => handleInputChange(e, field.onChange)}
-											value={Number(field.value) || ""}
+											onChange={e => {
+												if (/^\d*$/.test(e.target.value)) {
+													field.onChange(Number(e.target.value));
+												}
+											}}
 											type="text"
-											placeholder="15"
+											placeholder="Stock"
 										/>
 									</FormControl>
 								</FormItem>
@@ -113,10 +107,12 @@ export const DashCreateProductVariants = ({
 									<FormControl>
 										<Input
 											{...field}
-											onChange={e => handleInputChange(e, field.onChange)}
-											value={field.value || ""}
+											onChange={e => {
+												if (/^\d*$/.test(e.target.value))
+													field.onChange(Number(e.target.value));
+											}}
 											type="text"
-											placeholder="200"
+											placeholder="Price"
 										/>
 									</FormControl>
 								</FormItem>
@@ -132,10 +128,12 @@ export const DashCreateProductVariants = ({
 									<FormControl>
 										<Input
 											{...field}
-											onChange={e => handleInputChange(e, field.onChange)}
-											value={field.value || ""}
+											onChange={e => {
+												if (/^\d*$/.test(e.target.value))
+													field.onChange(Number(e.target.value));
+											}}
 											type="text"
-											placeholder="50%"
+											placeholder="Percentage"
 										/>
 									</FormControl>
 									<FormMessage />
@@ -149,7 +147,15 @@ export const DashCreateProductVariants = ({
 				type="button"
 				title="Add new variant"
 				addClasses="mt-5 !text-sm"
-				onClick={() => addVariants()}
+				onClick={() => {
+					addVariants({
+						colors: [],
+						discount: { percentage: 0 },
+						price: 0,
+						size: "",
+						stock: { quantityLeft: 0 },
+					});
+				}}
 			/>
 		</div>
 	);

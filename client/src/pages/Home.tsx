@@ -1,24 +1,32 @@
+import { MovingBanner } from "@/components/MovingBanner";
+import { OurTeam } from "@/features/about/components/OurTeam";
 import {
-	AccordionSection,
+	FAQs,
 	Contact,
 	Hero,
-	Reviews,
+	DiscountBanner,
 	ShopByCategory,
 } from "@/features/home";
-import { Products, NewProducts } from "@/features/product";
+import { PopularProducts, MenClothes } from "@/features/product";
+import { Electronics } from "@/features/product/components/Electronics";
+import { Watches } from "@/features/product/components/Watches";
 
 const Home = () => {
 	return (
 		<>
 			<Hero />
-			<div className="flex flex-col">
-				<Products title="Popular Products" />
-				<NewProducts />
+			<div className="flex flex-col container">
+				<PopularProducts />
+				<MenClothes />
+				<Electronics />
+				<Watches />
 			</div>
 			<ShopByCategory />
 			<Contact />
-			<Reviews />
-			<AccordionSection />
+			<DiscountBanner />
+			<OurTeam />
+			<MovingBanner />
+			<FAQs />
 		</>
 	);
 };

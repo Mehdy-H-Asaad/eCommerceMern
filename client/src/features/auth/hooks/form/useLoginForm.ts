@@ -1,23 +1,22 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { LoginSchema, useLogin } from "../..";
-import { TLoginDTO } from "../..";
+import { LoginSchema, useLogin } from "../../index";
 
 export const useLoginForm = () => {
-	const {
-		register,
-		handleSubmit,
-		formState: { errors },
-	} = useForm<z.infer<typeof LoginSchema>>({
+	const loginForm = useForm<z.infer<typeof LoginSchema>>({
 		resolver: zodResolver(LoginSchema),
+		defaultValues: {
+			email: "",
+			password: "",
+		},
 	});
 
 	const { signIn } = useLogin();
 
-	const onSubmit = (userData: TLoginDTO) => {
-		signIn(userData);
+	const onSubmit = (values: z.infer<typeof LoginSchema>) => {
+		signIn(values);
 	};
 
-	return { register, handleSubmit, errors, onSubmit };
+	return { loginForm, onSubmit };
 };

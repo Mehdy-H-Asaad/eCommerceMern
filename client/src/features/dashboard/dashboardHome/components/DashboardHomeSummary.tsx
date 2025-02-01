@@ -10,7 +10,6 @@ export const DashboardHomeSummary = () => {
 	}
 
 	const { userProducts } = useGetUserProducts(authUser?._id);
-
 	console.log(userProducts);
 
 	return (

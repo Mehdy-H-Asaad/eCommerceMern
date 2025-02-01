@@ -1,7 +1,3 @@
-import { FaRegUser } from "react-icons/fa";
-import { GoSearch } from "react-icons/go";
-import { RiShoppingCartLine } from "react-icons/ri";
-
 export const navLinks = [
 	{
 		title: "Home",
@@ -11,24 +7,56 @@ export const navLinks = [
 		title: "Shop",
 		path: "/shop",
 	},
-	{
-		title: "Contact us",
-		path: "/contact",
-	},
+
 	{
 		title: "About",
 		path: "/about",
 	},
 	{
-		title: <GoSearch size={24} />,
-		path: "/search",
+		title: "Contact us",
+		path: "/contact",
+	},
+];
+
+export const languages = [
+	{
+		id: 1,
+		language: "欢迎",
 	},
 	{
-		title: <FaRegUser size={24} />,
-		path: "/login",
+		id: 2,
+		language: "Bienvenido",
 	},
 	{
-		title: <RiShoppingCartLine size={24} />,
-		path: "/cart",
+		id: 3,
+		language: "Welcome",
+	},
+	{
+		id: 4,
+		language: "أهلاً وسهلاً",
+	},
+	{
+		id: 5,
+		language: "স্বাগতম",
+	},
+	{
+		id: 6,
+		language: "স্বাগতম",
+	},
+	{
+		id: 7,
+		language: "Bem-vindo",
+	},
+	{
+		id: 8,
+		language: "Добро пожаловать",
+	},
+	{
+		id: 9,
+		language: "ようこそ",
+	},
+	{
+		id: 10,
+		language: "ਜੀ ਆਇਆਂ ਨੂੰ",
 	},
 ];

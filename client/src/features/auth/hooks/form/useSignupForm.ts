@@ -2,21 +2,23 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { useSignup } from "..";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { singupSchema, TSignupDTO } from "../..";
+import { signUpSchema } from "../../index";
 export const useSignupForm = () => {
-	const { regiestering } = useSignup();
-
-	const {
-		register,
-		handleSubmit,
-		formState: { errors },
-	} = useForm<z.infer<typeof singupSchema>>({
-		resolver: zodResolver(singupSchema),
+	const signUpForm = useForm<z.infer<typeof signUpSchema>>({
+		resolver: zodResolver(signUpSchema),
+		defaultValues: {
+			email: "",
+			fullName: "",
+			password: "",
+			userName: "",
+		},
 	});
 
-	const onSumbit = (userData: TSignupDTO) => {
-		regiestering(userData);
+	const { regiestering } = useSignup();
+
+	const onSumbit = (values: z.infer<typeof signUpSchema>) => {
+		regiestering(values);
 	};
 
-	return { register, handleSubmit, errors, onSumbit };
+	return { signUpForm, onSumbit };
 };

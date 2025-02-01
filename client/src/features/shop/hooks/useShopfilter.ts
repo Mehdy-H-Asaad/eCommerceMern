@@ -1,11 +1,10 @@
-import { useGetProducts } from "@/features/product";
-import { useState, useEffect } from "react";
+import { useGetCategories } from "@/features/category";
+import { updateSearchParams } from "@/utils/updateSearchParams";
+import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import { useGetCategories } from "@/features/product";
 
 export const useShopfilter = () => {
 	const { categories } = useGetCategories();
-	const { refetchProducts, isRefetchingProducts } = useGetProducts();
 	const [searchParams, setSearchParams] = useSearchParams();
 	const [categoryId, setCategoryId] = useState<string>(
 		searchParams.get("category") || ""
@@ -17,48 +16,52 @@ export const useShopfilter = () => {
 		searchParams.get("discount") || ""
 	);
 
-	const updateSearchParams = (params: Record<string, string>) => {
-		const newParams = new URLSearchParams(searchParams.toString());
-		Object.entries(params).forEach(([key, value]) => {
-			if (value) {
-				newParams.set(key, value);
-			} else {
-				newParams.delete(key);
-			}
-		});
-		setSearchParams(newParams);
-	};
-
 	const handleParamCategoryClick = (selectedCategoryId: string) => {
 		const newCategoryId =
 			categoryId === selectedCategoryId ? "" : selectedCategoryId;
 		setCategoryId(newCategoryId);
 
-		updateSearchParams({ category: newCategoryId });
+		updateSearchParams(
+			{ category: newCategoryId },
+			searchParams,
+			setSearchParams
+		);
 	};
 
 	const handleParamConditionClick = (selectedCondition: string) => {
 		const newConditionStatus =
 			conditionStatus === selectedCondition ? "" : selectedCondition;
 		setConditionStatus(newConditionStatus);
-		updateSearchParams({ status: newConditionStatus });
+		updateSearchParams(
+			{ status: newConditionStatus },
+			searchParams,
+			setSearchParams
+		);
 	};
 
 	const handleParamDiscountClick = () => {
 		const newDiscount = discount === "true" ? "" : "true";
 		setDiscount(newDiscount);
-		updateSearchParams({ discount: newDiscount });
+		updateSearchParams(
+			{ discount: newDiscount },
+			searchParams,
+			setSearchParams
+		);
 	};
 
-	useEffect(() => {
-		setSearchParams("");
-	}, []);
+	const handleMaxPriceClick = (selectedMaxPrice: number) => {
+		updateSearchParams(
+			{
+				maxPrice: selectedMaxPrice === 0 ? "" : selectedMaxPrice.toString(),
+			},
+			searchParams,
+			setSearchParams
+		);
+	};
 
-	useEffect(() => {
-		if (!isRefetchingProducts) {
-			refetchProducts();
-		}
-	}, [categoryId, conditionStatus, discount]);
+	const handleSearchInput = (searchInput: string) => {
+		updateSearchParams({ search: searchInput }, searchParams, setSearchParams);
+	};
 
 	return {
 		handleParamCategoryClick,
@@ -67,5 +70,7 @@ export const useShopfilter = () => {
 		handleParamConditionClick,
 		categoryId,
 		conditionStatus,
+		handleMaxPriceClick,
+		handleSearchInput,
 	};
 };

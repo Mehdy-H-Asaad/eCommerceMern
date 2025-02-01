@@ -22,3 +22,6 @@
 .link:hover::before {
 	width: 100%;
 }
+.link-active::before {
+	width: 100%;
+}

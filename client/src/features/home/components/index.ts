@@ -1,5 +1,5 @@
-export * from "./AccordionSection";
+export * from "./FAQs";
 export * from "./Contact";
 export * from "./Hero";
-export * from "./Reviews";
+export * from "./DiscountBanner";
 export * from "./ShopByCategory";

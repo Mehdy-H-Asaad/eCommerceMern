@@ -1,7 +1,7 @@
 import mongoose, { Schema } from "mongoose";
-import { TCategoryModel } from "../../../Application/types/category/TCategoryModel";
+import { TCategory } from "../../../domain/entities/category.entity";
 
-const categorySchema = new Schema<TCategoryModel>(
+const categorySchema = new Schema<TCategory>(
 	{
 		name: {
 			type: String,

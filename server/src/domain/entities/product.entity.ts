@@ -1,19 +1,36 @@
-import {
-	EStatus,
-	TReview,
-} from "../../Application/types/product/TProductModel";
+import { ObjectId } from "mongoose";
 import { TVarinatSchema } from "../../Infrastructure/database/models/schemas/variant.schema";
 
-export class Product {
-	constructor(
-		public productName: string,
-		public category: string,
-		public productImage: string,
-		public description: string,
-		public user: string,
-		public variants: TVarinatSchema[],
-		public status: EStatus,
-		public reviews: TReview[] = [],
-		public _id?: string // public stock: TStock, // public discount: TDiscount
-	) {}
+export type TStock = {
+	quantityLeft: number;
+};
+
+export type TReview = {
+	reviewerName: string;
+	rating: number;
+};
+
+export type TDiscount = {
+	percentage: number;
+	validFrom?: Date;
+	validUntil?: Date;
+};
+
+export enum EStatus {
+	NEW = "new",
+	USED = "used",
 }
+
+export type TProduct = {
+	_id: string | ObjectId;
+	productName: string;
+	category: string | ObjectId;
+	productImage: string;
+	description: string;
+	user: string | ObjectId;
+	variants: TVarinatSchema[];
+	reviews: TReview[];
+	status: EStatus;
+	salesCount: number;
+	views: number;
+};

@@ -1,15 +1,19 @@
-import mongoose from "mongoose";
+import { ObjectId } from "mongoose";
 import { ROLES } from "../../shared/types/auth";
-export class User {
-	constructor(
-		public userName: string,
-		public fullName: string,
-		public password: string,
-		public email: string,
-		public role: ROLES = ROLES.USER,
-		public refreshTokens: string[] = [],
-		public likedItems: mongoose.Types.ObjectId[] = [],
-		public _id?: string,
-		public createdAt?: Date
-	) {}
-}
+
+export type TUser = {
+	_id: ObjectId | string;
+	userName: string;
+	fullName: string;
+	email: string;
+	password: string;
+	role?: ROLES;
+	refreshTokens: string[];
+	likedItems?: ObjectId[] | string[];
+	purchases: ObjectId[] | string[];
+	sales: ObjectId[] | string[];
+	createdAt?: Date;
+	phoneNumber?: string;
+	address?: string;
+	profileImg?: string;
+};

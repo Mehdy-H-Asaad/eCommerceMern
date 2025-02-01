@@ -1,9 +1,9 @@
 import { inject, injectable } from "inversify";
 import { NEXT, REQUEST, RESPONSE } from "../../../shared/types/server";
-import { TUserService } from "../../../Application/types/user/TUserService";
 import { FAIL, SUCCESS } from "../../../shared/constants/HTTP/httpStatusCode";
 import { catchError } from "../../middlewares/Error/catchError";
 import ErrorResponse from "../../middlewares/Error/errorResponse";
+import nodemailer from "nodemailer";
 import {
 	cookieOptionsWithMaxAge,
 	cookieOptionsWithoutMaxAge,
@@ -13,9 +13,10 @@ import {
 	TCreateUserDTO,
 	TLoginUserDTO,
 } from "../../../Application/DTOs/user/user.dto";
+import { UserService } from "../../../Application/Services/user/user.service";
 @injectable()
 export class UserController {
-	constructor(@inject("TUserService") private userService: TUserService) {}
+	constructor(@inject(UserService) private userService: UserService) {}
 
 	singup = async (req: REQUEST, res: RESPONSE, next: NEXT) => {
 		try {
@@ -45,7 +46,6 @@ export class UserController {
 			}
 
 			const { accessToken, newRefreshToken, clearCookie } = result;
-
 			// NEED TO CHANGE THE SECURE TO TRUE WHEN I DEPLOY TO PRODUCTION!!!!!!!!!!!!
 			if (clearCookie) {
 				res.clearCookie("jwt", cookieOptionsWithoutMaxAge);
@@ -128,6 +128,7 @@ export class UserController {
 	getTheAuthUser = async (req: REQUEST, res: RESPONSE, next: NEXT) => {
 		try {
 			const reqUser = req.user;
+
 			if (!reqUser) {
 				return next(new ErrorResponse(FAIL, "User not found", 404));
 			}
@@ -158,6 +159,79 @@ export class UserController {
 				return next(error);
 			}
 			return catchError(error, next, "getSingleUser");
+		}
+	};
+
+	getUsers = async (_req: REQUEST, res: RESPONSE, next: NEXT) => {
+		try {
+			const users = await this.userService.getUsers();
+
+			return res.status(200).json({ status: SUCCESS, data: users });
+		} catch (error) {
+			if (error instanceof ErrorResponse) {
+				return next(error);
+			}
+			return catchError(error, next, "getUsers");
+		}
+	};
+
+	updateProfile = async (req: REQUEST, res: RESPONSE, next: NEXT) => {
+		try {
+			const userId = req.user;
+
+			if (!userId) {
+				return new ErrorResponse(FAIL, "User not found", 404);
+			}
+			const { fullName, address, phoneNumber, email, password, profileImg } =
+				req.body;
+
+			const updatedUser = await this.userService.updateUser({
+				fullName,
+				address,
+				phoneNumber,
+				email,
+				password,
+				profileImg,
+				userId,
+			});
+
+			return res.status(200).json({ status: SUCCESS, data: updatedUser });
+		} catch (error) {
+			if (error instanceof ErrorResponse) {
+				return next(error);
+			}
+			return catchError(error, next, "updateProfile");
+		}
+	};
+
+	sendEmail = async (req: REQUEST, res: RESPONSE, next: NEXT) => {
+		const { email, name, message, subject } = req.body;
+		try {
+			const transporter = nodemailer.createTransport({
+				service: "gmail",
+				auth: {
+					pass: process.env.RECEIVER_PASS,
+					user: process.env.RECEIVER_EMAIL,
+				},
+			});
+
+			const mailOptions = {
+				from: email,
+				to: process.env.RECEIVER_EMAIL,
+				subject: subject,
+				text: `Name: ${name}\nEmail: ${email}\nMessage:\n${message}`,
+			};
+
+			await transporter.sendMail(mailOptions);
+
+			return res
+				.status(200)
+				.json({ status: SUCCESS, data: "Message sent successfully!" });
+		} catch (error) {
+			if (error instanceof ErrorResponse) {
+				return next(error);
+			}
+			return catchError(error, next, "sendEmail");
 		}
 	};
 }

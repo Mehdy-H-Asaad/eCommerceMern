@@ -1,8 +1,11 @@
 import "reflect-metadata";
 import express from "express";
 import authRoutes from "./Presentation/routes/auth.route";
+import userRoutes from "./Presentation/routes/user.route";
 import productRoutes from "./Presentation/routes/product.route";
 import categoryRoutes from "./Presentation/routes/category.route";
+import cartRoutes from "./Presentation/routes/cart.route";
+import orderRoutes from "./Presentation/routes/order.route";
 import dotenv from "dotenv";
 import connectToMongo from "./config/connectToMongo";
 import cookieParser from "cookie-parser";
@@ -32,6 +35,9 @@ app.use(cookieParser());
 app.use("/api/auth", authRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/categories", categoryRoutes);
+app.use("/api/orders", orderRoutes);
+app.use("/api/cart", cartRoutes);
+app.use("/api/user", userRoutes);
 
 app.use((error: any, _req: REQUEST, res: RESPONSE, _next: NEXT) => {
 	return res

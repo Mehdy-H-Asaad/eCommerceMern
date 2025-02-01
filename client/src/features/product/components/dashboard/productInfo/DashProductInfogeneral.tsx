@@ -11,16 +11,16 @@ import {
 	SelectItem,
 } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
-import { useAttributesChange } from "../../..";
+// import { useAttributesChange } from "../../..";
 
 export const DashProductInfogeneral = ({ id }: { id: string }) => {
-	const {
-		categories,
-		handleCategoryChange,
-		handleInputChange,
-		updatedProductDetails,
-		handleStatusChange,
-	} = useAttributesChange(id);
+	// const {
+	// 	categories,
+	// 	handleCategoryChange,
+	// 	handleInputChange,
+	// 	updatedProductDetails,
+	// 	handleStatusChange,
+	// } = useAttributesChange(id);
 
 	return (
 		<div>

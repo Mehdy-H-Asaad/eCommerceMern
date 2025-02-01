@@ -11,7 +11,7 @@ import {
 	SelectItem,
 } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
-import { useGetCategories } from "@/features/product";
+import { productSchema } from "@/features/product";
 import { z } from "zod";
 import { UseFormReturn } from "react-hook-form";
 import {
@@ -21,10 +21,10 @@ import {
 	FormLabel,
 	FormMessage,
 } from "@/components/ui/form";
-import { createdProductSchema } from "@/features/product/schema/createdProductSchema";
+import { useGetCategories } from "@/features/category";
 
 type TDashCreateProductGeneral = {
-	form: UseFormReturn<z.infer<typeof createdProductSchema>>;
+	form: UseFormReturn<z.infer<typeof productSchema>>;
 };
 
 export const DashCreateProductGeneral = ({
@@ -115,28 +115,20 @@ export const DashCreateProductGeneral = ({
 
 				<FormField
 					control={form.control}
-					name="category.name"
+					name="category._id"
 					render={({ field }) => (
 						<FormItem className="grid w-full max-w-sm items-center gap-1.5 mt-8">
 							<FormLabel htmlFor="category">Category</FormLabel>
 							<FormControl>
-								<Select
-									{...field}
-									onValueChange={value => {
-										const selectedCategory = categories?.find(
-											category => category._id === value
-										);
-
-										if (selectedCategory) {
-											form.setValue("category._id", selectedCategory._id);
-											form.setValue("category.name", selectedCategory.name);
-											form.clearErrors("category.name");
-										}
-									}}
-									value={form.getValues("category._id")}
-								>
+								<Select {...field} onValueChange={field.onChange}>
 									<SelectTrigger className="w-[180px]">
-										<SelectValue placeholder="Select a category" />
+										<SelectValue
+											placeholder={
+												categories?.find(
+													cat => cat._id.toString() === field.value?.toString()
+												)?.name || "Select category"
+											}
+										/>
 									</SelectTrigger>
 									<SelectContent>
 										<SelectGroup>

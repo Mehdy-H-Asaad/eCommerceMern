@@ -6,14 +6,18 @@ import MainTitle from "@/components/MainTitle";
 import { useState } from "react";
 import "../assets/styles/shopByCategory.css";
 import "@/assets/styles/global.css";
-import { useGetCategories } from "@/features/product";
+// import { useGetCategories } from "@/features/category";
 export const ShopByCategory = () => {
 	const [hoverImgIndex, setHoverImgIndex] = useState<number>(0);
 	const [imgOpacity, setImgOpacity] = useState<number>(1);
 
 	const imgs: string[] = [tshirtImg, shoeImg, watchImg];
 
-	const { categories } = useGetCategories();
+	const categories = [
+		{ _id: "679a9dc3d72845d9ad6d7f8b", category: "Clothes" },
+		{ _id: "679a9ddbd72845d9ad6d7f8f", category: "shoes" },
+		{ _id: "679a9ddfd72845d9ad6d7f91", category: "watches" },
+	];
 
 	const handleMouseEnter = (index: number) => {
 		setImgOpacity(0);
@@ -24,7 +28,7 @@ export const ShopByCategory = () => {
 	};
 
 	return (
-		<div className="bg-[#222222]  py-20">
+		<div className="bg-[#222222] my-primary py-primary">
 			<MainTitle
 				title="Shop by category"
 				addClasses="text-white text-center mb-16"
@@ -32,15 +36,15 @@ export const ShopByCategory = () => {
 			<div className="container">
 				<div className="flex flex-col lg:flex-row items-center justify-between">
 					<div className="p-10 flex flex-col gap-20">
-						{categories?.slice(0, 3).map((ele, index: number) => {
+						{categories.map((ele, index: number) => {
 							return (
 								<Link
 									key={index}
-									to={"/shop"}
-									className={`text-white font-bold text-5xl md:text-7xl orbitron cursor-pointer duration-500 hover:ml-4 link link-white w-fit mx-auto md:mx-0`}
+									to={`/shop/?category=${ele._id}`}
+									className={`text-white capitalize font-bold text-2xl sm:text-5xl md:text-7xl orbitron cursor-pointer duration-500 hover:ml-4 link link-white w-fit mx-auto md:mx-0`}
 									onMouseEnter={() => handleMouseEnter(index)}
 								>
-									{ele.name}
+									{ele.category}
 								</Link>
 							);
 						})}

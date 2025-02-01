@@ -14,11 +14,17 @@ router
 	.get(productController.getProducts)
 	.post(verifyJwt, productController.createProduct);
 
+router.route("/popular-products").get(productController.getPopularProducts);
+
+router.route("/:categoryName").get(productController.getProducts);
+
 router
-	.route("/:id")
+	.route("/single-product/:id")
 	.delete(productController.deleteProduct)
 	.get(productController.getSingleProduct);
 
-router.route("/userProducts/:id").get(productController.getUserProducts);
+router
+	.route("/user-products/:id")
+	.get(verifyJwt, productController.getUserProducts);
 
 export default router;

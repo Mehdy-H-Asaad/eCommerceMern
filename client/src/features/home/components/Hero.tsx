@@ -6,7 +6,7 @@ export const Hero = () => {
 		<div className="hero-bg flex items-center justify-center">
 			<div className="container">
 				<div className="text-center flex flex-col gap-5">
-					<h1 className="orbitron font-bold text-white text-5xl md:text-7xl">
+					<h1 className="orbitron font-bold text-white text-4xl sm:text-5xl md:text-7xl">
 						Welcome to Souqak
 					</h1>
 					<p className="text-white text-xl">

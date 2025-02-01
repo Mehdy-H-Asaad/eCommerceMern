@@ -1,3 +1,3 @@
-import { TCategoryModel } from "../../types/category/TCategoryModel";
+import { TCategory } from "../../../domain/entities/category.entity";
 
-export type TCreateCategoryDTO = TCategoryModel;
+export type TCreateCategoryDTO = TCategory;

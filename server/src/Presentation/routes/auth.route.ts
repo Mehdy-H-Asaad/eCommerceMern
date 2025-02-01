@@ -18,4 +18,6 @@ router.route("/logout").get(userController.logout);
 router.route("/getTheAuthUser").get(verifyJwt, userController.getTheAuthUser);
 
 router.route("/getSingleUser/:id").get(userController.getSingleUser);
+
+router.route("/").get(userController.getUsers);
 export default router;

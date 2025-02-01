@@ -1,4 +1,4 @@
-import { TUser } from "../../types/user/TUserModel";
+import { TUser } from "../../../domain/entities/user.entity";
 
 export type TCreateUserDTO = Omit<TUser, "likedItems">;
 
@@ -15,3 +15,8 @@ export type THandleRefreshTokenDTO = {
 export type TLoginAccessTokenDTO = {
 	accessToken: string;
 };
+
+export type TUpdateUserProfileDTO = Pick<
+	TUser,
+	"fullName" | "password" | "address" | "phoneNumber" | "email" | "profileImg"
+> & { userId: string };

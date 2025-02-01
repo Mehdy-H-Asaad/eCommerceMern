@@ -1,1 +1,1 @@
-export * from "./createdProductSchema";
+export * from "./product.shema";

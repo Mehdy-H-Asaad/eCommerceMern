@@ -1,6 +1,6 @@
 export * from "./create-product.service";
-export * from "./get-all-categories.service";
-export * from "./getProducts.service";
-export * from "./getSingleProduct.service";
+
+export * from "./get-products.service";
+export * from "./get-single-product.service";
 export * from "./delete-product.service";
-export * from "./getUserProducts.service";
+export * from "./get-user-products";

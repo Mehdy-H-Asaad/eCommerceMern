@@ -1,8 +1,9 @@
-import { DiscoverShop, ShopHeader } from "../features/shop";
+import { DiscoverShop } from "../features/shop";
+import { PageBanner } from "@/components/PageBanner";
 const Shop = () => {
 	return (
 		<>
-			<ShopHeader />
+			<PageBanner currentPage="Shop" />
 			<DiscoverShop />
 		</>
 	);

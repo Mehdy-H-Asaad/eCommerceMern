@@ -1,40 +1,51 @@
 import { injectable } from "inversify";
-import { User } from "../../../domain/entities/user.entity";
-import { TUserRepository } from "../../../domain/repositories/user/TUserRepository";
 import UserModel from "../../database/models/user.model";
-import { mapToDomainUser } from "../../../shared/helpers/mappers/user/mapToDomainUser";
+import { TUser } from "../../../domain/entities/user.entity";
+import { TUpdateUserProfileDTO } from "../../../Application/DTOs/user/user.dto";
 
 @injectable()
-export class UserRepository implements TUserRepository {
-	create = async (userData: User): Promise<User> => {
+export class UserRepository {
+	findAll = async (): Promise<TUser[]> => {
+		const users = await UserModel.find().populate({
+			path: "sales",
+			populate: {
+				path: "buyerId sellerId",
+				select: "userName",
+			},
+		});
+
+		return users.map(user => user.toObject());
+	};
+
+	create = async (userData: TUser): Promise<TUser> => {
 		const newUser = new UserModel(userData);
 
 		await newUser.save();
 
-		return mapToDomainUser(newUser);
+		return newUser;
 	};
 
-	findByEmail = async (email: string): Promise<User | null> => {
-		const user = await UserModel.findOne({ email });
+	findByEmail = async (email: string): Promise<TUser | null> => {
+		const user = await UserModel.findOne({ email }).select("+password");
 
 		if (!user) return null;
 
-		return mapToDomainUser(user);
+		return user;
 	};
-	findById = async (userId: string): Promise<User | null> => {
-		const user = await UserModel.findById(userId);
+	findById = async (userId: string): Promise<TUser | null> => {
+		const user = await UserModel.findById(userId).select("-password");
 
 		if (!user) return null;
 
-		return mapToDomainUser(user);
+		return user;
 	};
 
-	findByUserName = async (userName: string): Promise<User | null> => {
+	findByUserName = async (userName: string): Promise<TUser | null> => {
 		const user = await UserModel.findOne({ userName });
 
 		if (!user) return null;
 
-		return mapToDomainUser(user);
+		return user;
 	};
 
 	addRefreshToken = async (
@@ -51,14 +62,14 @@ export class UserRepository implements TUserRepository {
 
 	findUserByRefreshToken = async (
 		refreshToken: string
-	): Promise<User | null> => {
+	): Promise<TUser | null> => {
 		const user = await UserModel.findOne({
 			refreshTokens: { $in: refreshToken },
 		});
 
 		if (!user) return null;
 
-		return mapToDomainUser(user);
+		return user;
 	};
 
 	removeRefreshToken = async (
@@ -70,7 +81,9 @@ export class UserRepository implements TUserRepository {
 
 		if (!user) return null;
 
-		user.refreshTokens = user.refreshTokens?.filter(rt => rt !== refreshToken);
+		user.refreshTokens = user.refreshTokens?.filter(
+			(rt: string) => rt !== refreshToken
+		);
 
 		await user.save();
 	};
@@ -84,9 +97,24 @@ export class UserRepository implements TUserRepository {
 		await user.save();
 	};
 
-	save = async (user: User): Promise<void> => {
+	updateProfile = async (
+		data: TUpdateUserProfileDTO
+	): Promise<TUser | null> => {
+		const updatedUser = await UserModel.findOneAndUpdate(
+			{ _id: data.userId },
+			data,
+			{ new: true }
+		);
+
+		if (!updatedUser) return null;
+
+		return updatedUser;
+	};
+
+	save = async (user: TUser): Promise<void> => {
 		try {
 			const existingUser = await UserModel.findById(user._id);
+			// console.log(existingUser);
 
 			if (!existingUser) {
 				throw new Error("User not found");

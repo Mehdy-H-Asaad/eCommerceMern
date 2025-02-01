@@ -1,3 +1,6 @@
-export class Category {
-	constructor(public name: string, public _id?: string) {}
-}
+import { ObjectId } from "mongoose";
+
+export type TCategory = {
+	_id: string | ObjectId;
+	name: string;
+};

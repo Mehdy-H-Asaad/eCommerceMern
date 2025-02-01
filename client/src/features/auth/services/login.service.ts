@@ -1,5 +1,5 @@
 import { publicAxios } from "@/lib/api/axiosClient";
-import { TLoginDTO, TLoginResponseDTO } from "..";
+import { TLoginDTO, TLoginResponseDTO } from "../types";
 
 export const login = async (userData: TLoginDTO) => {
 	try {

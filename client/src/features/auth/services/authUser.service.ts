@@ -1,11 +1,11 @@
 import axiosClient from "@/lib/api/axiosClient";
-import { TAuthUserDataDTO } from "..";
+import { TUser } from "../types";
 
 export const getTheAuthUser = async () => {
 	try {
 		const { data } = await axiosClient.get("/auth/getTheAuthUser");
 
-		const authUserData: TAuthUserDataDTO = data.data;
+		const authUserData: TUser = data.data;
 
 		return authUserData;
 	} catch (error: any) {

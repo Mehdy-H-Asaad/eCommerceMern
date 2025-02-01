@@ -1,5 +1,4 @@
 import { NextFunction } from "express";
-import { TProductService } from "../../../Application/types/product/TProductService";
 import { NEXT, REQUEST, RESPONSE } from "../../../shared/types/server";
 import { catchError } from "../../middlewares/Error/catchError";
 import { inject, injectable } from "inversify";
@@ -7,12 +6,15 @@ import { FAIL, SUCCESS } from "../../../shared/constants/HTTP/httpStatusCode";
 import ErrorResponse from "../../middlewares/Error/errorResponse";
 import { TCreateProductDTO } from "../../../Application/DTOs/product/product.dto";
 import { v2 as cloudinary } from "cloudinary";
-import { TUserService } from "../../../Application/types/user/TUserService";
+import { ProductService } from "../../../Application/Services/product/product.service";
+import { UserService } from "../../../Application/Services/user/user.service";
+import { CategoryService } from "../../../Application/Services/category/category.service";
 @injectable()
 export class ProductController {
 	constructor(
-		@inject("TProductService") private productService: TProductService,
-		@inject("TUserService") private readonly userService: TUserService
+		@inject(ProductService) private productService: ProductService,
+		@inject(UserService) private readonly userService: UserService,
+		@inject(CategoryService) private readonly categoryService: CategoryService
 	) {}
 
 	getProducts = async (
@@ -21,14 +23,36 @@ export class ProductController {
 		next: NextFunction
 	): Promise<void> => {
 		try {
-			const { category, status, discount, price } = req.query;
+			const { category, status, discount, maxPrice, search } = req.query;
 
-			const products = await this.productService.getAllProducts({
-				category,
-				status,
-				discount,
-				price,
-			});
+			let { categoryName } = req.params;
+
+			const limit = parseInt(req.query.limit as string);
+			const page = parseInt(req.query.page as string);
+
+			let searchedCategory;
+			if (categoryName)
+				searchedCategory = await this.categoryService.findCategoryByName(
+					categoryName as string
+				);
+
+			if (searchedCategory) {
+				categoryName = searchedCategory._id.toString() || "";
+				// return next(new ErrorResponse(FAIL, "Category not found", 404));
+			}
+
+			const products = await this.productService.getAllProducts(
+				{
+					category,
+					status,
+					discount,
+					maxPrice,
+					search,
+					categoryName,
+				},
+				limit,
+				page
+			);
 
 			res.status(200).json({ status: SUCCESS, data: products });
 		} catch (error) {
@@ -103,8 +127,9 @@ export class ProductController {
 			const { id } = req.params;
 
 			const product = await this.productService.getSingleProduct(id);
+			console.log(product);
 
-			res.status(200).json({ status: SUCCESS, data: [product] });
+			res.status(200).json({ status: SUCCESS, data: product });
 		} catch (error) {
 			if (error instanceof ErrorResponse) {
 				next(error);
@@ -116,6 +141,8 @@ export class ProductController {
 	getUserProducts = async (req: REQUEST, res: RESPONSE, next: NEXT) => {
 		try {
 			const { id } = req.params;
+
+			console.log(req.user);
 
 			const user = await this.userService.findUser(id);
 
@@ -130,6 +157,19 @@ export class ProductController {
 				return next(error);
 			}
 			return catchError(error, next, "getUserProduct");
+		}
+	};
+
+	getPopularProducts = async (_req: REQUEST, res: RESPONSE, next: NEXT) => {
+		try {
+			const popularProducts = await this.productService.findPopularProducts();
+
+			return res.status(200).json({ status: SUCCESS, data: popularProducts });
+		} catch (error) {
+			if (error instanceof ErrorResponse) {
+				return next(error);
+			}
+			return catchError(error, next, "getPopularProducts");
 		}
 	};
 }

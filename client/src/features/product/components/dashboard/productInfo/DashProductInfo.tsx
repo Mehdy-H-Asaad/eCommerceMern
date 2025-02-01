@@ -6,12 +6,12 @@ import { Input } from "@/components/ui/input";
 
 import { Label } from "@/components/ui/label";
 import GeneralButton from "@/components/ui/GeneralButton";
-import { useAttributesChange } from "@/features/product/hooks/form/useAttributesChange";
 import { DashProductInfogeneral } from "./DashProductInfogeneral";
 
 import { TVariants } from "@/features/product/types";
 import { MdDeleteForever } from "react-icons/md";
-import { useVariantsStore } from "@/features/product";
+import { useCreateProductForm } from "@/features/product/hooks";
+// import { useVariantsStore } from "@/features/product";
 
 export const DashProductInfo = () => {
 	const { id } = useParams();
@@ -19,7 +19,7 @@ export const DashProductInfo = () => {
 		return <div>id is missing</div>;
 	}
 
-	const { addVariants, removeVariant, variants } = useVariantsStore();
+	// const { addVariants, removeVariant, variants } = useVariantsStore();
 
 	// const handleVariantChange = (
 	// 	index: number,
@@ -28,6 +28,8 @@ export const DashProductInfo = () => {
 	// ) => {
 	// 	updateVariant(index, field, value);
 	// };
+
+	const { variants } = useCreateProductForm();
 
 	const {
 		singleProductData,
@@ -83,7 +85,7 @@ export const DashProductInfo = () => {
 						<MdDeleteForever
 							size={24}
 							className="mb-2 cursor-pointer text-red-600"
-							onClick={() => removeVariant(index)}
+							// onClick={() => removeVariant(index)}
 						/>
 						<div className="grid grid-cols-5 gap-x-5">
 							<div className="grid w-full max-w-sm items-center gap-1.5">
@@ -93,9 +95,9 @@ export const DashProductInfo = () => {
 									id={`size-${index}`}
 									placeholder="L"
 									value={variant.size}
-									onChange={e =>
-										handleVariantChange(index, "size", e.target.value)
-									}
+									// onChange={e =>
+									// 	handleVariantChange(index, "size", e.target.value)
+									// }
 								/>
 							</div>
 							<div className="grid w-full max-w-sm items-center gap-1.5">
@@ -105,13 +107,13 @@ export const DashProductInfo = () => {
 									id={`color-${index}`}
 									placeholder="Red, Green ..."
 									value={variant.colors?.join(", ")} // Convert array to comma-separated string
-									onChange={e =>
-										handleVariantChange(
-											index,
-											"colors",
-											e.target.value.split(", ").map(color => color.trim())
-										)
-									}
+									// onChange={e =>
+									// 	handleVariantChange(
+									// 		index,
+									// 		"colors",
+									// 		e.target.value.split(", ").map(color => color.trim())
+									// 	)
+									// }
 								/>
 							</div>
 							<div className="grid w-full max-w-sm items-center gap-1.5">
@@ -121,11 +123,11 @@ export const DashProductInfo = () => {
 									id={`stock-${index}`}
 									placeholder="15"
 									value={variant.stock?.quantityLeft || 0}
-									onChange={e =>
-										handleVariantChange(index, "stock", {
-											quantityLeft: Number(e.target.value),
-										})
-									}
+									// onChange={e =>
+									// 	handleVariantChange(index, "stock", {
+									// 		quantityLeft: Number(e.target.value),
+									// 	})
+									// }
 								/>
 							</div>
 							<div className="grid w-full max-w-sm items-center gap-1.5">
@@ -135,9 +137,9 @@ export const DashProductInfo = () => {
 									id={`price-${index}`}
 									placeholder="200"
 									value={variant.price || 0}
-									onChange={e =>
-										handleVariantChange(index, "price", Number(e.target.value))
-									}
+									// onChange={e =>
+									// 	handleVariantChange(index, "price", Number(e.target.value))
+									// }
 								/>
 							</div>
 							<div className="grid w-full max-w-sm items-center gap-1.5">
@@ -147,13 +149,13 @@ export const DashProductInfo = () => {
 									id={`discount-percentage-${index}`}
 									placeholder="50"
 									value={variant.discount?.percentage || 0}
-									onChange={e =>
-										handleVariantChange(index, "discount", {
-											percentage: Number(e.target.value),
-											validFrom: variant.discount?.validFrom || new Date(),
-											validUntil: variant.discount?.validUntil || new Date(),
-										})
-									}
+									// onChange={e =>
+									// 	handleVariantChange(index, "discount", {
+									// 		percentage: Number(e.target.value),
+									// 		validFrom: variant.discount?.validFrom || new Date(),
+									// 		validUntil: variant.discount?.validUntil || new Date(),
+									// 	})
+									// }
 								/>
 							</div>
 						</div>
@@ -163,7 +165,7 @@ export const DashProductInfo = () => {
 				<GeneralButton
 					title="Add new variant"
 					addClasses="mt-5 !text-sm"
-					onClick={() => addVariants()}
+					// onClick={() => addVariants()}
 				/>
 			</div>
 

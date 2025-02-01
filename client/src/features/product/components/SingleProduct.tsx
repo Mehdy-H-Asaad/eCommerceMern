@@ -1,4 +1,4 @@
-import { useGetSingleProduct } from "..";
+import { useGetSingleProduct } from "../index";
 import { Link, useParams } from "react-router-dom";
 import { CiHeart } from "react-icons/ci";
 import PageWithLinkToHome from "@/components/PageWithLinkToHome";
@@ -6,18 +6,16 @@ import GeneralButton from "@/components/ui/GeneralButton";
 import PaymentImg from "../assets/imgs/icon-collection-4.png";
 import OnlineSupport from "../assets/imgs/icon-collection-3.png";
 import { FaStar } from "react-icons/fa";
-import { useState } from "react";
-import { formatDiscount } from "../utils/formatDiscount";
-import { RenderOnAttributes } from ".";
+import { ChangeEvent, useState } from "react";
+import { formatDiscount } from "../../../utils/formatDiscount";
+import { RenderOnAttributes } from "../index";
 import { SkeletonCard } from "@/components/SkeletonCard";
-// import {
-// 	Carousel,
-// 	CarouselContent,
-// 	CarouselItem,
-// 	CarouselNext,
-// 	CarouselPrevious,
-// } from "@/components/ui/carousel";
-import { Products } from "./Products";
+// import { PopularProducts } from "../index";
+// import { useCartStore } from "@/features/cart/store/cart.store";
+import { Input } from "@/components/ui/input";
+import { formatCurrency } from "@/utils/formatCurrency";
+import { useAddItemToCart } from "@/features/cart";
+import { formateDate } from "@/utils/formateDate";
 
 export const ProductBox = () => {
 	const [stars, setStarts] = useState<number>(0);
@@ -25,11 +23,15 @@ export const ProductBox = () => {
 		useState<number>(0);
 	const { id } = useParams<{ id: string }>();
 
+	// const { addItem } = useCartStore();
+
 	if (!id) {
 		return <div>Product not found</div>;
 	}
 
 	const { singleProductData, isLoadingProduct } = useGetSingleProduct(id);
+	const { addItemToCart } = useAddItemToCart();
+	const [quantity, setQuantity] = useState<number>(1);
 
 	if (isLoadingProduct)
 		return (
@@ -43,6 +45,23 @@ export const ProductBox = () => {
 	const handleDataFromChild = (index: number) => {
 		setSelectedItemIndexFromChild(index);
 	};
+
+	const handleQuantityChange = (e: ChangeEvent<HTMLInputElement>) => {
+		const { value } = e.target;
+
+		if (/^\d*$/.test(value)) {
+			setQuantity(Number(value));
+		}
+	};
+
+	const handleIncreaseQuantity = () => {
+		setQuantity(prev => prev + 1);
+	};
+	const handleDecreaseQuantity = () => {
+		setQuantity(prev => (prev === 1 ? 1 : prev - 1));
+	};
+
+	console.log(singleProductData);
 
 	return (
 		<div className="mb-20">
@@ -58,25 +77,12 @@ export const ProductBox = () => {
 					<div className="flex-1 min-w-[300px] max-w-[500px]">
 						<img
 							src={singleProductData.productImage as string}
-							className="w-full object-contain"
+							className="size-[30rem] object-contain"
 							alt=""
 						/>
-						{/* <Carousel className="">
-							<CarouselPrevious className="left-0 size-14 z-30" />
-							<CarouselContent>
-								{Array.from({ length: 5 }).map(() => {
-									return (
-										<CarouselItem className="sm:basis-1/2 md:basis-1/3 lg:basis-1/3 mt-10">
-											<img src={testImg} className="size-full " alt="" />
-										</CarouselItem>
-									);
-								})}
-							</CarouselContent>
-							<CarouselNext className="right-0 size-14" />
-						</Carousel> */}
 					</div>
 					<div className="base flex-1">
-						<div className="mb-4 text-xl font-[500]">
+						<div className="mb-4 text-xl font-[600]">
 							Product by:{" "}
 							<Link
 								to={`/user/${singleProductData.user._id}`}
@@ -93,8 +99,20 @@ export const ProductBox = () => {
 							<CiHeart size={30} />
 						</div>
 
-						<div className="font-[500] capitalize mt-4">
-							Category: {singleProductData.category.name}
+						<div className="flex items-center justify-between">
+							<div className="font-[500] capitalize my-4">
+								Category: {singleProductData.category.name}
+							</div>
+							<div className=" text-green-600 font-bold text-lg capitalize">
+								{singleProductData.status}
+							</div>
+						</div>
+
+						<div className="font-[500] mb-10">
+							Posted on:{" "}
+							<span className="underline">
+								{formateDate(singleProductData.createdAt)}
+							</span>
 						</div>
 
 						<div className="flex gap-4 p-2 mt-2 mb-6">
@@ -143,12 +161,11 @@ export const ProductBox = () => {
 										</div>
 									</div>
 								) : (
-									<div>
-										{
+									<div className="text-xl font-[600]">
+										{formatCurrency(
 											singleProductData.variants[selectedItemIndexFromChild]
 												.price
-										}
-										$
+										)}
 									</div>
 								)}
 							</div>
@@ -178,18 +195,39 @@ export const ProductBox = () => {
 							onVariantChange={handleDataFromChild}
 						/>
 
+						<div className="font-[600] my-2 text-xl">Description: </div>
 						<p className="text-lg mb-10">{singleProductData.description}</p>
 
 						<div className="flex items-center gap-9 ">
 							<div className="rounded-md flex items-center border border-[#eeeeee] h-11 bg-white text-black">
-								<button className="p-4 flex-1 w-12 text-2xl">-</button>
-								<input
-									type="text"
-									className="w-12 outline-none bg-transparent font-[600] text-lg text-center "
+								<button
+									onClick={handleDecreaseQuantity}
+									className="p-4 flex-1 w-12 text-2xl"
+								>
+									-
+								</button>
+								<Input
+									value={quantity}
+									onChange={handleQuantityChange}
+									className="w-12 outline-none bg-transparent font-[600] text-lg text-center border-none"
 								/>
-								<button className="flex-1 p-4 w-12 text-2xl">+</button>
+								<button
+									onClick={handleIncreaseQuantity}
+									className="flex-1 p-4 w-12 text-2xl"
+								>
+									+
+								</button>
 							</div>
 							<GeneralButton
+								onClick={() =>
+									addItemToCart({
+										quantity,
+										productId: singleProductData._id,
+										price:
+											singleProductData.variants[selectedItemIndexFromChild]
+												.price,
+									})
+								}
 								title={"Add to cart"}
 								addClasses="flex-1 !bg-black !text-white"
 							/>
@@ -217,7 +255,7 @@ export const ProductBox = () => {
 				</div>
 			</div>
 			<div className="mt-20">
-				<Products title="Related products" />
+				{/* <PopularProducts title="Related products" /> */}
 			</div>
 		</div>
 	);

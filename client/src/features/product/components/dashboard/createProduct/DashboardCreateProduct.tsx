@@ -2,9 +2,8 @@ import MainTitle from "@/components/MainTitle";
 import { Input } from "@/components/ui/input";
 import { IoImageOutline } from "react-icons/io5";
 import GeneralButton from "@/components/ui/GeneralButton";
-import { DashCreateProductGeneral } from "..";
-import { DashCreateProductVariants } from ".";
-import { useVariantsStore } from "../../..";
+import { DashCreateProductGeneral } from "../../../index";
+import { DashCreateProductVariants } from "../../../index";
 
 import {
 	Form,
@@ -14,11 +13,9 @@ import {
 	FormLabel,
 	FormMessage,
 } from "@/components/ui/form";
-import { useCreateProductForm } from "../../..";
+import { useCreateProductForm } from "../../../index";
 
 export const DashboardCreateProduct = () => {
-	const { variants } = useVariantsStore();
-
 	const { createdProductForm, handleImgChange, onSubmit, selectedImg } =
 		useCreateProductForm();
 
@@ -74,10 +71,7 @@ export const DashboardCreateProduct = () => {
 						/>
 					</div>
 
-					<DashCreateProductVariants
-						variants={variants}
-						form={createdProductForm}
-					/>
+					<DashCreateProductVariants form={createdProductForm} />
 					<GeneralButton
 						type="submit"
 						title="Create product"

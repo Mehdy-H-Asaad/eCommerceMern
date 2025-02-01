@@ -1,24 +1,31 @@
 import { QueryKey, useMutation, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 
-export const useCustomMutation = <T, E = Error, K = void>(
-	mutationFunction: (payload: K) => Promise<T>,
-	queryKey: QueryKey
+export const useCustomMutation = <T, K>(
+	mutationFunction: (payload: T) => Promise<void | K>,
+	queryKey: QueryKey,
+	toastMessageSuccess?: string,
+	toastMessageLoading?: string
 ) => {
+	let loadingToastId: string | undefined;
+
 	const queryClient = useQueryClient();
 
-	return useMutation<T, E, K>({
+	return useMutation({
 		mutationFn: mutationFunction,
-
-		onSuccess: () => {
-			queryClient.invalidateQueries({ queryKey: queryKey });
-			toast.success("Success");
+		onMutate: () => {
+			if (toastMessageLoading)
+				loadingToastId = toast.loading(toastMessageLoading);
 		},
 
+		onSuccess: () => {
+			toast.dismiss(loadingToastId);
+			queryClient.invalidateQueries({ queryKey: queryKey });
+			if (toastMessageSuccess) toast.success(toastMessageSuccess);
+		},
 		onError: (error: any) => {
-			toast.error((error as any).message || "An error occurred");
-
-			// throw error;
+			toast.dismiss(loadingToastId);
+			toast.error(error.message || "Something went wrong.");
 		},
 	});
 };

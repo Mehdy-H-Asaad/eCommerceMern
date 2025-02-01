@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { TVariants } from "..";
+import { TVariants } from "../types";
 
 type TRenderOnAttributes = {
 	variants: TVariants[];
@@ -41,8 +41,15 @@ export const RenderOnAttributes = ({
 					);
 				})}
 			</div>
-			<div className="mb-10">
-				<div className="font-[600]  capitalize">
+			<div
+				className={`${
+					variants[selectedItemIndex].colors &&
+					!variants[selectedItemIndex].colors[selectedColorIndex]
+						? ""
+						: "mb-10"
+				}`}
+			>
+				<div className="font-[600] capitalize">
 					{variants[selectedItemIndex].colors &&
 						(!variants[selectedItemIndex].colors[selectedColorIndex]
 							? ""

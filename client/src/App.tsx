@@ -1,7 +1,5 @@
 import { Route, Routes, useLocation } from "react-router-dom";
 import Home from "./pages/Home";
-import Navbar from "./components/layout/Navbar";
-import Footer from "./components/layout/Footer";
 import Signup from "./pages/Signup";
 import { Login } from "./pages/Login";
 import { Toaster } from "react-hot-toast";
@@ -13,8 +11,13 @@ import { DashboardSidebar } from "./features/dashboard/shared/layout/DashboardSi
 import { DashboardProductsPage } from "./pages/dashboard/products/DashboardProductsPage";
 import { DashboardCreateProductPage } from "./pages/dashboard/products/DashboardCreateProductPage";
 import { useAuthUser } from "./features/auth/hooks/useAuthUser";
-import { DashboardProductInfoPage } from "./pages/dashboard/products/DashboardProductInfo";
+// import { DashboardProductInfoPage } from "./pages/dashboard/products/DashboardProductInfo";
 import { UserProductsPage } from "./pages/UserProductsPage";
+import { ListOrdersPage } from "./pages/dashboard/orders/ListOrdersPage";
+import { ProfileSettingsPage } from "./pages/dashboard/profile/ProfileSettingsPage";
+import { MessagesPage } from "./pages/dashboard/messages/MessagesPage";
+import { AboutPage } from "./pages/AboutPage";
+import { ContactPage } from "./pages/ContactPage";
 
 function App() {
 	const location = useLocation();
@@ -26,7 +29,6 @@ function App() {
 		<>
 			{!isDashboardPage && (
 				<>
-					<Navbar />
 					<Routes>
 						<Route path="/" element={<Home />} />
 						<Route path="/signup" element={<Signup />} />
@@ -34,8 +36,9 @@ function App() {
 						<Route path="/products/:id" element={<ProductPage />} />
 						<Route path="/shop" element={<Shop />} />
 						<Route path="/user/:id" element={<UserProductsPage />} />
+						<Route path="/about" element={<AboutPage />} />
+						<Route path="/contact" element={<ContactPage />} />
 					</Routes>
-					<Footer />
 				</>
 			)}
 
@@ -54,9 +57,21 @@ function App() {
 								path="/dashboard/products/create-product"
 								element={<DashboardCreateProductPage />}
 							/>
-							<Route
+							{/* <Route
 								path="/dashboard/products/:id"
 								element={<DashboardProductInfoPage />}
+							/> */}
+							<Route
+								path="/dashboard/orders/list-orders"
+								element={<ListOrdersPage />}
+							/>
+							<Route
+								path="/dashboard/profile/settings"
+								element={<ProfileSettingsPage />}
+							/>
+							<Route
+								path="/dashboard/profile/chats"
+								element={<MessagesPage />}
 							/>
 						</Routes>
 					</div>
